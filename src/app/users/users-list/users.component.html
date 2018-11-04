@@ -1,0 +1,39 @@
+<div class="container">
+  <ul class="list-group">
+    <li class="list-group-item headings" id='check'>
+      <div class="row" (click) = sortUsersBy($event.target)>
+        <div class="col-md-2 " id="userName"><strong>Username </strong>
+          <span class="glyphicon glyphicon-sort-by-alphabet" id="userName"></span>
+        </div>
+        <div class="col-md-2"><strong>First Name</strong>
+          <span class="sort glyphicon glyphicon-sort-by-alphabet" id="firstName"></span>
+        </div>
+        <div class="col-md-2"><strong>Last Name</strong>
+          <span class="sort glyphicon glyphicon-sort-by-alphabet" id="lastName"></span>
+        </div>
+        <div class="col-md-2"><strong>Birthday</strong>
+          <span class="sort glyphicon glyphicon-sort-by-order" id="birthday"></span>
+        </div>
+        <div class="col-md-2"><strong>Email</strong>
+          <span class="sort glyphicon glyphicon-sort-by-alphabet" id="email"></span>
+        </div>
+        <div class="col-md-2"><strong>Date Joined</strong>
+          <span class="sort glyphicon glyphicon-sort-by-order" id="date"></span>
+        </div>
+      </div>
+    </li>
+    
+    <div class="user-list">
+      <li class="list-group-item user-data-row" *ngFor="let user of users">
+        <div class="row">
+          <div class="col-md-2">{{ user.userName }}</div>
+          <div class="col-md-2">{{ user.firstName }}</div>
+          <div class="col-md-2">{{ user.lastName }}</div>
+          <div class="col-md-2">{{ user.birthday.toLocaleDateString() }}</div>
+          <div class="col-md-2"><a href="mailto:{{ user.email }}">{{ user.email }}</a></div>
+          <div class="col-md-2">{{ user.joinDate.toLocaleDateString() }}</div>
+        </div>
+      </li>
+    </div>
+</ul>
+</div>

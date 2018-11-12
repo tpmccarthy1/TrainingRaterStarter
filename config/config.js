@@ -1,6 +1,7 @@
 CONFIG = {};
 
-CONFIG.db_dialect = 'mys';
-CONFIG.db_name = 'TrainingRaterStarter'; 
+CONFIG.app = 'dev';
+CONFIG.db_dialect = 'mysql';
+CONFIG.db_name = 'TrainingRater'; 
 CONFIG.db_user = 'root';
-CONFIG.db_password = 'password';
+CONFIG.db_password = 'testtest';

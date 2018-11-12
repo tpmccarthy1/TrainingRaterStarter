@@ -6,9 +6,9 @@ const getAll = async function ( req, res ) {
     let err, users;
 
     let whereStatement = {};
-    if (req.query.name) {
+    if (req.query.userName) {
         whereStatement.Statement.userName = {
-            $like: '%' + req.query.name + '%'
+            $like: '%' + req.query.userName + '%'
         };
     }
 

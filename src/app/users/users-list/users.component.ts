@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../users.service';
+import { UsersService, IUsers } from '../users.service';
 
 @Component({
   selector: 'app-users',
@@ -8,13 +8,17 @@ import { UsersService } from '../users.service';
 })
 export class UsersComponent implements OnInit {
 
-  users = [];
+  users: IUsers[];
 
   constructor(private usersService: UsersService) { }
 
   ngOnInit() {
-    this.users =  this.usersService.getUsers();
+    this.usersService.getUsers()
+    .subscribe(
+      (users) => this.users = users,
+      );
   }
+
   /* Function to sort by heading in ascending order */
   sortUsersBy(e): void {
     if (e.nodeName === 'SPAN') {
@@ -33,7 +37,7 @@ export class UsersComponent implements OnInit {
          this.users = this.users.sort((a, b) =>
          (a.joinDate.getTime() < b.joinDate.getTime() ) ? -1 : (a.joinDate.getTime() > b.joinDate.getTime()) ? 1 : 0);
         }
+    }
   }
-}
 
 }

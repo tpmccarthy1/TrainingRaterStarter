@@ -12,7 +12,7 @@ const getAll = async function ( req, res ) {
         };
     }
 
-    [err, users] = await to(Users.findAll({ where: whereStatement}))
+    [err, users] = await to(Users.findAll({ where: whereStatement}));
 
     return res.json(users);
 }

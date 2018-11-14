@@ -10,6 +10,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//CORS
+app.use(function(req, res, next){
+    //website you will allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    //pass to next layer of middleware
+    next();
+})
+
 app.get('/', (req, res) => { res.send('Hello World!!!')} );
 
 models.sequelize

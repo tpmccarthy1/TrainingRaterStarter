@@ -1,7 +1,8 @@
 <div class="container">
+    <button class="btn btn-primary" (click)="goToUserDetail('add')">Add User</button>
   <ul class="list-group">
     <li class="list-group-item headings" id='check'>
-      <div class="row" (click) = sortUsersBy($event.target)>
+      <div class="row" (click)="sortUsersBy($event.target)">
         <div class="col-md-2 " id="userName"><strong>Username </strong>
           <span class="glyphicon glyphicon-sort-by-alphabet" id="userName"></span>
         </div>
@@ -24,7 +25,7 @@
     </li>
     
     <div class="user-list">
-      <li class="list-group-item user-data-row" *ngFor="let user of users">
+      <li class="list-group-item user-data-row" *ngFor="let user of users" (click)="goToUserDetail(user.id)" [style.cursor]="'pointer'">
         <div class="row">
           <div class="col-md-2">{{ user.userName }}</div>
           <div class="col-md-2">{{ user.firstName }}</div>

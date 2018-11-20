@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService, IUsers } from '../users.service';
+import { UsersService, IUser } from '../users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -8,15 +9,23 @@ import { UsersService, IUsers } from '../users.service';
 })
 export class UsersComponent implements OnInit {
 
-  users: IUsers[] = [];
+  users: IUser[] = [];
 
-  constructor(private usersService: UsersService) { }
+  constructor(
+      private usersService: UsersService,
+      private router: Router,
+  ) { }
 
   ngOnInit() {
     this.usersService.getUsers()
     .subscribe(
       (users) => this.users = users,
       );
+  }
+
+  goToUserDetail(idParam: number | string): void {
+    this.router.navigate(['users',  idParam]);
+
   }
 
   /* Function to sort by heading in ascending order */

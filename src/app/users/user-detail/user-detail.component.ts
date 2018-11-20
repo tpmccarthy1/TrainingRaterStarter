@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, IUser } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+
 
 const defaultUser: IUser = {
   id: 0,
@@ -66,12 +68,12 @@ export class UserDetailComponent implements OnInit {
       if (user.id) {
           this.usersService.updateUser(user)
               .subscribe(() => {
-                  this.router.navigate(['user']);
+                  this.router.navigate(['users']);
               });
       } else {
           this.usersService.createUser(user)
               .subscribe(() => {
-                  this.router.navigate(['user']);
+                  this.router.navigate(['users']);
               });
       }
 

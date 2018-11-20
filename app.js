@@ -13,10 +13,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //CORS
 app.use(function(req, res, next){
     //website you will allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
     //pass to next layer of middleware
     next();
-})
+});
+
 
 app.get('/', (req, res) => { res.send('Hello World!!!')} );
 

@@ -53,24 +53,28 @@ export class SessionsDetailComponent implements OnInit {
 
   submit(): void {
     if (!this.formValid() ) {
-        console.log('form no good');
+        console.log('form not valid');
       // TODO: Add not valid message here
       return;
     }
 
-    console.log(this.session);
-    if (this.session.id) {
-      // update end point
-    } else {
-      // create end point
-    }
+    const session = {...this.session};
 
+    if (session.id) {
+      this.sessionsService.updateSession(session)
+          .subscribe(() => {
+              this.router.navigate(['sessions']);
+          });
+    } else {
+      this.sessionsService.createSession(session)
+          .subscribe(() => {
+              this.router.navigate(['sessions']);
+          });
+  }
     // This is what we want to do on success, put on success side for end points
     this.router.navigate(['sessions']);
     console.log(this.startTimeAsString);
     this.session.startTime = this.startTimeAsString;
-    // this.sessionsService.createSession(this.session)
-    //   .subscribe();
   }
 
 }

@@ -23,9 +23,12 @@ export class UsersComponent implements OnInit {
       );
   }
 
-  goToUserDetail(idParam: number | string): void {
-    this.router.navigate(['users',  idParam]);
+  goToAdd(): void {
+    this.router.navigate(['users/add']);
+  }
 
+  goToEdit(id: number): void {
+    this.router.navigate([`users/${id}`]);
   }
 
   /* Function to sort by heading in ascending order */
@@ -44,7 +47,8 @@ export class UsersComponent implements OnInit {
          this.users = this.users.sort((a, b) => (a.email < b.email) ?  -1 :  (a.email > b.email) ? 1 : 0);
         } else if (e.id === 'date') {
          this.users = this.users.sort((a, b) =>
-         (a.joinDate.getTime() < b.joinDate.getTime() ) ? -1 : (a.joinDate.getTime() > b.joinDate.getTime()) ? 1 : 0);
+         (new Date(a.joinDate).getTime() < new Date(b.joinDate).getTime() ) ? -1 :
+         (new Date(a.joinDate).getTime() > new Date(b.joinDate).getTime()) ? 1 : 0);
         }
     }
   }

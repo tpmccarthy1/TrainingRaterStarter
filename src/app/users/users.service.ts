@@ -28,12 +28,11 @@ export class UsersService {
     return this.http.get<IUser>(`http://localhost:3000/users/${id}`);
   }
 
-  createUser(user: IUser): Observable<IUser> {
-    return this.http.post<IUser>('http://localhost:3000/users', user);
+  save(user: IUser): Observable<IUser | number[]> {
+    if (user.id) {
+      return this.http.put<number[]>('http://localhost:3000/users', user);
+    } else {
+      return this.http.post<IUser>('http://localhost:3000/users', user);
+    }
   }
-
-  updateUser(user: IUser): Observable<IUser> {
-    return this.http.put<IUser>('http://localhost:3000/users', user);
-  }
-
 }

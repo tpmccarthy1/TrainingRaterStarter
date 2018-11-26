@@ -2,23 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { SessionsService, ISession } from '../sessions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const defaultSession: ISession = {
-      id: 0,
-      name: '',
-      location: '',
-      startTime: new Date(),
-      createdAt: null,
-      updatedAt: null
-};
-
 @Component({
   templateUrl: './session-detail.component.html',
 })
 
 export class SessionsDetailComponent implements OnInit {
 
-  session: ISession = { ...defaultSession };
-  startTimeAsString = defaultSession.startTime;
+  session: ISession;
 
   constructor(
       private sessionsService: SessionsService,
@@ -27,54 +17,56 @@ export class SessionsDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-      const idAsString = this.route.snapshot.paramMap.get('entityId');
-      const id = isNaN(parseInt(idAsString, 0)) ? 0 : parseInt(idAsString, 0);
-      if (id) {
+      let id: string | number = this.route.snapshot.paramMap.get('sessionId');
+
+      id = isNaN(parseInt(id, 0)) ? 0 : parseInt(id, 0);
+
+      if (id > 0) {
         this.sessionsService.getSessionById(id)
         .subscribe(
           (session) => {
-              console.log(this.session);
+              const startTime = new Date(session.startTime);
+              session.startTime = startTime.toISOString().slice(0, 16);
               this.session = session;
-          },
-          (error) => {
-            this.router.navigate(['sessions']);
-            console.log('error');
-          },
-        );
+        });
+      } else {
+        // new session
+        this.session = {
+          id: 0,
+          name: '',
+          location: '',
+          startTime: this.getLocalDateTime(),
+          createdAt: this.getLocalDateTime(),
+          updatedAt: this.getLocalDateTime(),
+        };
       }
   }
 
-  private formValid(): boolean {
-    if (this.session.name.trim() && this.session.location) {
-      return true;
-    }
-    return false;
+  getLocalDateTime(): string {
+    const startTime = new Date();
+    startTime.setHours(startTime.getHours() - (startTime.getTimezoneOffset() / 60));
+    return startTime.toISOString().slice(0, 16);
   }
 
-  submit(): void {
+  private formValid(): boolean {
+    return this.session.name && this.session.location ? true : false;
+  }
+
+  save(): void {
     if (!this.formValid() ) {
         console.log('form not valid');
-      // TODO: Add not valid message here
       return;
     }
 
-    const session = {...this.session};
+    this.sessionsService.save(this.session)
+      .subscribe((session) => {
+        this.router.navigate(['sessions']);
+      });
 
-    if (session.id) {
-      this.sessionsService.updateSession(session)
-          .subscribe(() => {
-              this.router.navigate(['sessions']);
-          });
-    } else {
-      this.sessionsService.createSession(session)
-          .subscribe(() => {
-              this.router.navigate(['sessions']);
-          });
   }
-    // This is what we want to do on success, put on success side for end points
+
+  cancel(): void {
     this.router.navigate(['sessions']);
-    console.log(this.startTimeAsString);
-    this.session.startTime = this.startTimeAsString;
   }
 
 }

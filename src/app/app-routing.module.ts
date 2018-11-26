@@ -10,12 +10,13 @@ const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'sessions', component: SessionsListComponent },
   { path: 'users', component: UsersComponent},
-  { path: 'sessions/:entityId', component: SessionsDetailComponent},
-  { path: 'users/:entityId', component: UserDetailComponent}
+  { path: 'sessions/:sessionId', component: SessionsDetailComponent},
+  { path: 'users/:userId', component: UserDetailComponent}
 ];
 
 @NgModule({
   exports: [RouterModule],
   imports: [RouterModule.forRoot(appRoutes)],
 })
+
 export class AppRoutingModule { }

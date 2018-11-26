@@ -1,5 +1,5 @@
 <div class="container">
-    <button class="btn btn-primary" (click)="goToUserDetail('add')">Add User</button>
+    <button class="btn btn-primary add-btn" (click)="goToAdd()">Add User</button>
   <ul class="list-group">
     <li class="list-group-item headings" id='check'>
       <div class="row" (click)="sortUsersBy($event.target)">
@@ -25,7 +25,7 @@
     </li>
     
     <div class="user-list">
-      <li class="list-group-item user-data-row" *ngFor="let user of users" (click)="goToUserDetail(user.id)" [style.cursor]="'pointer'">
+      <li class="list-group-item user-data-row" *ngFor="let user of users" (click)="goToEdit(user.id)" [style.cursor]="'pointer'">
         <div class="row">
           <div class="col-md-2">{{ user.userName }}</div>
           <div class="col-md-2">{{ user.firstName }}</div>

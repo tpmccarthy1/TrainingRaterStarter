@@ -20,13 +20,17 @@ export class SessionsListComponent implements OnInit {
   ngOnInit() {
     this.sessionsService.getSessions()
     .subscribe(
-      (sessions) => this.sessions = sessions,
-      );
+      (sessions) => {
+        this.sessions = sessions;
+      });
   }
 
-  goToSessionDetail(idParam: number | string): void {
-      this.router.navigate(['sessions',  idParam]);
+  goToAdd(): void {
+    this.router.navigate(['sessions/add']);
+  }
 
+  goToEdit(id: number): void {
+    this.router.navigate([`sessions/${id}`]);
   }
 
 }

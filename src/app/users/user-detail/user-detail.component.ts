@@ -1,20 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, IUser } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
-
-
-const defaultUser: IUser = {
-  id: 0,
-  userName: '',
-  firstName: '',
-  lastName: '',
-  birthday: new Date(),
-  email: '',
-  joinDate: new Date(),
-  createdAt: null,
-  updatedAt: null
-};
 
 @Component({
   templateUrl: './user-detail.component.html',
@@ -22,7 +8,7 @@ const defaultUser: IUser = {
 
 export class UserDetailComponent implements OnInit {
 
-  user: IUser = { ...defaultUser };
+  user: IUser;
 
   constructor(
     private usersService: UsersService,
@@ -31,56 +17,57 @@ export class UserDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const idAsString = this.route.snapshot.paramMap.get('entityId');
-    const id = isNaN(parseInt(idAsString, 0)) ? 0 : parseInt(idAsString, 0);
-    if (id) {
+
+    let id: string | number = this.route.snapshot.paramMap.get('userId');
+    id = isNaN(parseInt(id, 0)) ? 0 : parseInt(id, 0);
+    if (id > 0) {
       this.usersService.getUserById(id)
       .subscribe(
         (user) => {
-            console.log(this.user);
             this.user = user;
-        },
-        (error) => {
-          this.router.navigate(['users']);
-          console.log('error');
-        },
-      );
+        });
+    } else {
+        // new user
+        this.user = {
+            id: 0,
+            userName: '',
+            firstName: '',
+            lastName: '',
+            birthday: new Date(),
+            email: '',
+            joinDate: new Date(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
     }
   }
 
   private formValid(): boolean {
-      if (this.user.userName.trim() && this.user.firstName.trim()
-          && this.user.lastName.trim() && this.user.email.trim()) {
-          return true;
-      }
-      return false;
+    const reqFields = [
+                    this.user.userName,
+                    this.user.firstName,
+                    this.user.lastName,
+                    this.user.birthday,
+                    this.user.email
+                ];
+    return reqFields ? true : false;
   }
 
-  submit(): void {
-      if (!this.formValid()) {
-          // TODO CCC: add not valid message here
-          console.log('form not valid');
-          return;
-      }
+  save(): void {
+    if (!this.formValid() ) {
+        console.log('form not valid');
+      return;
+    }
 
-      const user = {...this.user};
-
-      if (user.id) {
-          this.usersService.updateUser(user)
-              .subscribe(() => {
-                  this.router.navigate(['users']);
-              });
-      } else {
-          this.usersService.createUser(user)
-              .subscribe(() => {
-                  this.router.navigate(['users']);
-              });
-      }
+    this.usersService.save(this.user)
+      .subscribe((user) => {
+        this.router.navigate(['users']);
+      });
 
   }
 
   cancel(): void {
-      this.router.navigate(['users']);
+    this.router.navigate(['users']);
   }
 
 }

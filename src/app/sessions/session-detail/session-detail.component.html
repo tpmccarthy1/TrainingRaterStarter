@@ -11,8 +11,13 @@
             <input type="datetime-local" class="form-control" [(ngModel)]="session.startTime" />
         
             <br>
-            <button type="button" class="btn btn-default" (click)="save()" >Save</button>
-            <button type="button" class="btn btn-default" (click)="cancel()" >Cancel</button>
+            <button type="button" class="btn btn-default" (click)="save()">Save</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
         </div>
     </div>
+<div class="col-md-6">
+    <div *ngIf="this.session" class="well well-sm">
+        <app-session-rating [sessionId]="session.id"></app-session-rating>
+    </div>
+</div>
 </div>

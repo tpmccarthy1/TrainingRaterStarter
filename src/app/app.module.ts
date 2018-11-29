@@ -8,7 +8,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { HttpClientModule } from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,10 @@ import { HttpClientModule } from '@angular/common/http';
     SessionsModule,
     UsersModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastModule,
+    ToastModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -36,7 +36,7 @@ const get = async function (req, res) {
 
 module.exports.get = get;
 
-//Update a  user
+//Update a user
 const update = async function (req, res) {
     let err, user, data;
     data = req.body;
@@ -58,37 +58,42 @@ const update = async function (req, res) {
   
     return res.json(user);
   }
+  
   module.exports.update = update;
   
-  //Create a new user
-  const create = async function (req, res) {
+// Create 
+const create = async function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     let err, user, userInfo;
   
-    userInfo = req.body;
-    [err, user] = await to(Users.create(userInfo));
-    if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
+    // Function to create new user and save to db
+    const createUser = async function(user){
+      let err;
+      if (validator.isEmail(user.email)) {
+        [err, user] = await to(Users.create(user));
+        if(err) { 
+          TE('User already exists with that email'); 
+        }
       }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422; // unprocessable entity
-      return res.json({ success: false, error: err });
     }
-    [err, user] = await to(user.save());
-    if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
+    
+    userInfo = req.body; //set userInfo to request body
+
+    // Validate that an email and password has been provided 
+    if (!body.email){
+      return ReE(res, 'Please enter an email.', 422);
+    } else if (!body.password) {
+      return ReE(res, 'Please enter a password.', 422);
+    } else {
+      [err, user] = await to(createUser(userInfo));
+      if(err) {
+        return ReE(res, err, 422);
       }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422
-      return res.json({ success: false, error: err });
-  
+      
+      // Success
+      return ReS(res, user, 201);
     }
-    res.statusCode = 201;
-    return res.json(user);
+
   }
 
   module.exports.create = create;

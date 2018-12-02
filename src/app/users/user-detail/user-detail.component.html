@@ -5,8 +5,10 @@
         <hr>
         <label>Email</label>
         <input type="text" class="form-control" [(ngModel)]="user.email" />
-        <label>Password</label>
-        <input type="text" class="form-control" [(ngModel)]="user.password" />
+        <div *ngIf = "isUser">
+            <label>Password</label>
+            <input type="text" class="form-control" [(ngModel)]="user.password" />
+        </div>    
         <label>First Name</label>
         <input type="text" class="form-control" [(ngModel)]="user.firstName" />
         <label>Last Name</label>

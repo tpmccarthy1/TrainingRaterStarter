@@ -10,6 +10,7 @@ import { ToastsManager } from 'ng2-toastr';
 export class UserDetailComponent implements OnInit {
 
   user: IUser;
+  isUser: boolean;
 
   constructor(
     private usersService: UsersService,
@@ -19,6 +20,8 @@ export class UserDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
+    this.isUser = true;
 
     let id: string | number = this.route.snapshot.paramMap.get('userId');
     id = isNaN(parseInt(id, 0)) ? 0 : parseInt(id, 0);

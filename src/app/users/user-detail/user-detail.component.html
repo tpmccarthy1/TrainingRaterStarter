@@ -3,21 +3,24 @@
     <div *ngIf="this.user" class="well well-sm">
         <h4>User Detail</h4>
         <hr>
-        <label>Username</label>
-        <input type="text" class="form-control" [(ngModel)]="user.userName" />
+        <label>Email</label>
+        <input type="text" class="form-control" [(ngModel)]="user.email" />
+        <label>Password</label>
+        <input type="text" class="form-control" [(ngModel)]="user.password" />
         <label>First Name</label>
         <input type="text" class="form-control" [(ngModel)]="user.firstName" />
         <label>Last Name</label>
         <input type="text" class="form-control" [(ngModel)]="user.lastName" />
         <label>Birthday</label>
         <input type="date" class="form-control" [(ngModel)]="user.birthday" />
-        <label>Email</label>
-        <input type="text" class="form-control" [(ngModel)]="user.email" />
-        <label>Join Date</label>
-        <input type="date" class="form-control" [(ngModel)]="user.joinDate" />
+        <label>Phone</label>
+        <input type="text" class="form-control" [(ngModel)]="user.phone" />
+        <label>Trainer</label>
+        <input type="checkbox" autocomplete="off" [(ngModel)]="user.isTrainer" />
         <br>
         <button type="button" class="btn btn-default" (click)="save()">Save</button>
         <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-default" (click)="delete()">Delete User</button>
     </div>
     </div>
 </div>

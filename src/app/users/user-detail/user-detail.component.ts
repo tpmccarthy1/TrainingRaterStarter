@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService, IUser } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastsManager } from 'ng2-toastr';
 
 @Component({
   templateUrl: './user-detail.component.html',
@@ -14,6 +15,7 @@ export class UserDetailComponent implements OnInit {
     private usersService: UsersService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastManager: ToastsManager,
   ) { }
 
   ngOnInit() {
@@ -30,12 +32,13 @@ export class UserDetailComponent implements OnInit {
         // new user
         this.user = {
             id: 0,
-            userName: '',
+            email: '',
+            password: '',
             firstName: '',
             lastName: '',
             birthday: new Date(),
-            email: '',
-            joinDate: new Date(),
+            phone: '',
+            isTrainer: false,
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -44,30 +47,38 @@ export class UserDetailComponent implements OnInit {
 
   private formValid(): boolean {
     const reqFields = [
-                    this.user.userName,
+                    this.user.email,
                     this.user.firstName,
                     this.user.lastName,
-                    this.user.birthday,
-                    this.user.email
+                    this.user.password,
+                    this.user.isTrainer
                 ];
-    return reqFields ? true : false;
+
+    return reqFields.every((element =>  element !== '')) ? true : false;
   }
 
   save(): void {
     if (!this.formValid() ) {
-        console.log('form not valid');
+      this.toastManager.error('There is a problem with your form.');
       return;
     }
 
     this.usersService.save(this.user)
       .subscribe((user) => {
         this.router.navigate(['users']);
-      });
+    });
 
   }
 
   cancel(): void {
     this.router.navigate(['users']);
+  }
+
+  delete(): void {
+    this.usersService.delete(this.user.id)
+      .subscribe((user) => {
+        this.router.navigate(['users']);
+      });
   }
 
 }

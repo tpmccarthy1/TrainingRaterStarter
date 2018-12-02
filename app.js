@@ -9,13 +9,24 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const Users = require('./models').Users;
 const app = express();
 
-// Use express router
-const router = require('./routes');
-app.use('/', router);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(passport.initialize());
+let opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = CONFIG.jwt_encryption;
+passport.use(new JWT(opts, async function (jwt_payload, done) {
+    let err, user;
+    [err, user] = await to(Users.findById(jwt_payload.user_id));
+  
+    if (err) return done(err, false);
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+}));
 
 // CORS
 app.use(function (req, res, next) {
@@ -33,6 +44,9 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Use express router
+const router = require('./routes/routes');
+app.use('/', router);
 
 models.sequelize
     .authenticate()
@@ -49,26 +63,6 @@ if (CONFIG.app === 'dev'){
 
 module.exports = app;
 
-const PassportSetup = function(passport) {
-    var opts = {};
-    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-    opts.secretOrKey = CONFIG.jwt_encryption;
-
-    passport.use(new JWT(opts, async function(jwt_payload, done) {
-        let err, user;
-        [err, user] = await to(Users.findById(jwt_payload.user_id));
-        if(err) {
-            return done(err, false);
-        }
-        if(user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-        }
-    }))
-}
-
 
 // add delete end points
 // refactor sessions and Users
-// make passport work

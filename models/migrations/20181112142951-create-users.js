@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userName: {
-        type: Sequelize.STRING
-      },
       firstName: {
         type: Sequelize.STRING
       },
@@ -20,11 +17,17 @@ module.exports = {
       birthday: {
         type: Sequelize.DATE
       },
-      email: {
+      phone: {
         type: Sequelize.STRING
       },
-      joinDate: {
+      email: {
         type: Sequelize.DATE
+      },
+      isTrainer: {
+        type: Sequelize.BOOLEAN
+      },
+      password: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

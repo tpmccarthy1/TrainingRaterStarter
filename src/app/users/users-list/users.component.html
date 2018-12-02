@@ -3,7 +3,7 @@
   <ul class="list-group">
     <li class="list-group-item headings" id='check'>
       <div class="row" (click)="sortUsersBy($event.target)">
-        <div class="col-md-2 " id="userName"><strong>Username </strong>
+        <div class="col-md-2 " id="userName"><strong>Email </strong>
           <span class="glyphicon glyphicon-sort-by-alphabet" id="userName"></span>
         </div>
         <div class="col-md-2"><strong>First Name</strong>
@@ -15,24 +15,23 @@
         <div class="col-md-2"><strong>Birthday</strong>
           <span class="sort glyphicon glyphicon-sort-by-order" id="birthday"></span>
         </div>
-        <div class="col-md-2"><strong>Email</strong>
+        <div class="col-md-2"><strong>Phone</strong>
           <span class="sort glyphicon glyphicon-sort-by-alphabet" id="email"></span>
         </div>
-        <div class="col-md-2"><strong>Date Joined</strong>
-          <span class="sort glyphicon glyphicon-sort-by-order" id="date"></span>
+        <div class="col-md-2"><strong>Trainer</strong>
+          <span class="sort glyphicon glyphicon-sort-by-order" id="trainer"></span>
         </div>
       </div>
     </li>
-    
     <div class="user-list">
       <li class="list-group-item user-data-row" *ngFor="let user of users" (click)="goToEdit(user.id)" [style.cursor]="'pointer'">
         <div class="row">
-          <div class="col-md-2">{{ user.userName }}</div>
+          <div class="col-md-2"><a href="mailto:{{ user.email }}">{{ user.email }}</a></div>
           <div class="col-md-2">{{ user.firstName }}</div>
           <div class="col-md-2">{{ user.lastName }}</div>
           <div class="col-md-2">{{ user.birthday }}</div>
-          <div class="col-md-2"><a href="mailto:{{ user.email }}">{{ user.email }}</a></div>
-          <div class="col-md-2">{{ user.joinDate }}</div>
+          <div class="col-md-2">{{ user.phone }}</div>
+          <div class="col-md-2">{{ user.isTrainer }}</div>
         </div>
       </li>
     </div>

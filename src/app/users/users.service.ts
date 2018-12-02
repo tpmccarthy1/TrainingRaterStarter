@@ -4,12 +4,13 @@ import { Observable } from 'rxjs/Observable';
 
 export interface IUser {
   id: number;
-  userName: string;
+  email: string;
+  password: string;
   firstName: string;
   lastName: string;
   birthday: Date;
-  email: string;
-  joinDate: Date;
+  phone: string;
+  isTrainer: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,5 +35,9 @@ export class UsersService {
     } else {
       return this.http.post<IUser>('http://localhost:3000/users', user);
     }
+  }
+
+  delete(id: number): Observable<IUser> {
+    return this.http.delete<IUser>(`http://localhost:3000/users/${id}`);
   }
 }

@@ -1,99 +1,155 @@
 const Users = require('../models').Users;
+const validator = require('validator');
 
 //Get all users
-const getAll = async function ( req, res ) {
+  const getAll = async function ( req, res ) {
     res.setHeader('Content-Type', 'application/json');
-    let err, users;
-
     let whereStatement = {};
     if (req.query.userName) {
         whereStatement.Statement.userName = {
             $like: '%' + req.query.userName + '%'
         };
     }
-
+    
     [err, users] = await to(Users.findAll({ where: whereStatement}));
 
-    return res.json(users);
+    return ReS(res, users, 200);
 }
 
 module.exports.getAll = getAll;
 
 //Get a single user 
-const get = async function (req, res) {
-    
-    let err, user;
-    let userId = parseInt(req.params.userId)
+  const get = async function (req, res) {
     res.setHeader('Content-Type', 'application/json');
-  
-    [err, user] = await to(Users.findById(userId))
+    let userId = parseInt(req.params.userId);
+
+    let err, user;
+    [err, user] = await to(Users.findById(userId));
     if (!user) {
-      res.statusCode = 404;
-      return res.json({ success: false, error: err });
+      ReE(res, err, 404);
     }
-    return res.json(user);
+    //Success
+    return ReS(res, user, 200);
   }
 
 module.exports.get = get;
 
 //Update a user
-const update = async function (req, res) {
-    let err, user, data;
-    data = req.body;
-  
+  const update = async function (req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    const data = req.body;
+    
+    let err, user;
     [err, user] = await to(Users.update(data, {
       where: {
         id: data.id
       }
     }));
+    
     if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
-      }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422
-      return res.json({ success: false, error: err });
+      return ReE(res, err, 422);
     }
-  
-    return res.json(user);
+    // Success
+    return ReS(res, user, 200);
   }
   
   module.exports.update = update;
   
 // Create 
-const create = async function (req, res) {
+  const create = async function (req, res) {
     res.setHeader('Content-Type', 'application/json');
-    let err, user, userInfo;
-  
-    // Function to create new user and save to db
-    const createUser = async function(user){
-      let err;
-      if (validator.isEmail(user.email)) {
-        [err, user] = await to(Users.create(user));
-        if(err) { 
-          TE('User already exists with that email'); 
-        }
-      }
-    }
-    
-    userInfo = req.body; //set userInfo to request body
+    const body = req.body;
 
-    // Validate that an email and password has been provided 
+   // Validate that an email and password has been provided 
     if (!body.email){
       return ReE(res, 'Please enter an email.', 422);
     } else if (!body.password) {
       return ReE(res, 'Please enter a password.', 422);
     } else {
-      [err, user] = await to(createUser(userInfo));
+      let err, user;
+
+      [err, user] = await to(createUser(body));
       if(err) {
+        console.log(err);
         return ReE(res, err, 422);
-      }
-      
+      } 
       // Success
       return ReS(res, user, 201);
     }
-
   }
 
   module.exports.create = create;
+
+  // Function to create new user and save to db
+  const createUser = async function (userInfo) {
+    let err;
+    if (validator.isEmail(userInfo.email)) {
+      [err, user] = await to(Users.create(userInfo));
+      if (err) TE('Email already exists.');
+      return user;
+    } else {
+      TE('Email is invalid');
+    }
+  }
+  module.exports.createUser = createUser;
+
+
+  // Log in function
+  const login = async function (req, res) {
+    const body = req.body;
+    let err, user;
+
+    [err, user] = await to(authUser(body));
+    if (err) return ReE(res, err, 422);
+
+    return ReS(res, { token: user.getJWT(), user: user.toJSON() });
+  }
+  
+  module.exports.login = login;
+
+  // Authorize user function
+  const authUser = async function (userInfo){
+    if (!userInfo.email) TE('Please enter an emai, to login');
+
+    if (!userInfo.password) TE('Please enter a password to login');
+
+    let user;
+    if(validator.isEmail(userInfo.email)){
+
+      [err, user] = await to(Users.findOne({ where: { email: userInfo.email } }));
+      if (err) TE(err.message);
+    } else {
+      TE('A valid email was not entered');
+    }
+
+    if(!user) TE('Not registered');
+
+    [err, user] = await to(user.comparePassword(userInfo.password));
+
+    if(err) TE(err.message);
+
+    return user;
+
+  }
+
+  module.exports.authUser = authUser;
+
+  // Delete user function
+  const deleteUser = async function(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    let userId = parseInt(req.params.userId);
+
+    let err, user;
+    [err, user] = await to(Users.destroy({ where: { id: userId } }));
+ 
+    if (err) {
+      return ReE(res, err, 422);
+    }
+    
+    // Success
+    return ReS(res, user, 200);
+  }
+
+  module.exports.deleteUser = deleteUser;
+
+

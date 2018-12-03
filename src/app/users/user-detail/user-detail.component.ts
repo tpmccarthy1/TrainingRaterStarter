@@ -10,8 +10,12 @@ import { ToastsManager } from 'ng2-toastr';
 export class UserDetailComponent implements OnInit {
 
   user: IUser;
+<<<<<<< HEAD
   isUser: boolean; // TODO: Hook this up to user authentication
   newUser: boolean;
+=======
+  isUser: boolean;
+>>>>>>> 0374b6f225320ad76c0d992255ffd916f0a74ac1
 
   constructor(
     private usersService: UsersService,
@@ -21,6 +25,8 @@ export class UserDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
+    this.isUser = true;
 
     // Variable for userId parameted
     const userId = this.route.snapshot.paramMap.get('userId');

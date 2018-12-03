@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SessionRatingService, ISessionRating, RatingValue } from './session-rating.service';
 import { ToastsManager } from 'ng2-toastr';
 
-
 @Component({
   selector: 'app-session-rating',
   templateUrl: './session-rating.component.html',

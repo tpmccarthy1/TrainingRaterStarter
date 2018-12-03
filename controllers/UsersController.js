@@ -13,6 +13,10 @@ const validator = require('validator');
     
     [err, users] = await to(Users.findAll({ where: whereStatement}));
 
+    if (err) {
+      return ReE(res, err, 404);
+    }
+
     return ReS(res, users, 200);
 }
 

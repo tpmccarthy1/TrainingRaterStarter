@@ -24,7 +24,7 @@ router.post('/sessions', SessionsController.create);
 router.put('/sessions', SessionsController.update); 
 
 // Delete session
-// TODO: ADD DELETE 
+router.delete('/sessions/:sessionId', SessionsController.deleteSession);
 
 
 // Bring in Users controller

@@ -72,4 +72,11 @@ export class SessionsDetailComponent implements OnInit {
     this.router.navigate(['sessions']);
   }
 
+  delete(): void {
+    this.sessionsService.delete(this.session.id)
+      .subscribe((session) => {
+        this.router.navigate(['sessions']);
+      });
+  }
+
 }

@@ -40,4 +40,5 @@ export class UsersService {
   delete(id: number): Observable<IUser> {
     return this.http.delete<IUser>(`http://localhost:3000/users/${id}`);
   }
+
 }

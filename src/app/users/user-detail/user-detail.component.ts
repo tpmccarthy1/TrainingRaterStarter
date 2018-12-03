@@ -10,7 +10,8 @@ import { ToastsManager } from 'ng2-toastr';
 export class UserDetailComponent implements OnInit {
 
   user: IUser;
-  isUser: boolean;
+  isUser: boolean; // TODO: Hook this up to user authentication
+  newUser: boolean;
 
   constructor(
     private usersService: UsersService,
@@ -20,10 +21,14 @@ export class UserDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
-    this.isUser = true;
 
-    let id: string | number = this.route.snapshot.paramMap.get('userId');
+    // Variable for userId parameted
+    const userId = this.route.snapshot.paramMap.get('userId');
+
+    // Set newUser flag to false to show delete if not new user
+    this.newUser = userId === 'add' ? false : true;
+
+    let id: string | number = userId;
     id = isNaN(parseInt(id, 0)) ? 0 : parseInt(id, 0);
     if (id > 0) {
       this.usersService.getUserById(id)

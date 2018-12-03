@@ -35,4 +35,8 @@ export class SessionsService {
     }
   }
 
+  delete(id: number): Observable<ISession> {
+    return this.http.delete<ISession>(`http://localhost:3000/sessions/${id}`);
+  }
+
 }

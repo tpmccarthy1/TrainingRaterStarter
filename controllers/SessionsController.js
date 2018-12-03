@@ -14,7 +14,11 @@ const getAll = async function ( req, res ) {
 
     [err, sessions] = await to(Sessions.findAll({ where: whereStatement}))
 
-    return res.json(sessions);
+    if (err) {
+      return ReE(res, err, 404);
+    }
+
+    return ReS(res, sessions, 200);
 }
 
 module.exports.getAll = getAll;
@@ -26,12 +30,13 @@ const get = async function (req, res) {
     let sessionId = parseInt(req.params.sessionId)
     res.setHeader('Content-Type', 'application/json');
   
-    [err, session] = await to(Sessions.findById(sessionId))
+    [err, session] = await to(Sessions.findById(sessionId));
+
     if (!session) {
-      res.statusCode = 404;
-      return res.json({ success: false, error: err });
+      return ReE(res, err, 404);
     }
-    return res.json(session);
+
+    return ReS(res, session, 200);
   }
 
 module.exports.get = get;
@@ -46,22 +51,17 @@ const update = async function (req, res) {
         id: data.id
       }
     }));
+   
     if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
-      }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422
-      return res.json({ success: false, error: err });
+      return ReE(res, err, 422);
     }
-  
+
     return res.json(session);
   }
-  module.exports.update = update;
+module.exports.update = update;
   
-  //Create a new session
-  const create = async function (req, res) {
+//Create a new session
+const create = async function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     let err, session, sessionInfo;
   
@@ -77,18 +77,30 @@ const update = async function (req, res) {
       return res.json({ success: false, error: err });
     }
     [err, session] = await to(session.save());
-    if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
-      }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422
-      return res.json({ success: false, error: err });
-  
-    }
-    res.statusCode = 201;
-    return res.json(session);
+    if(err) {
+        console.log(err);
+        return ReE(res, err, 422);
+      } 
+      // Success
+      return ReS(res, session, 201);
   }
 
 module.exports.create = create;
+
+// Delete user function
+const deleteSession = async function (req, res){
+  res.setHeader('Content-Type', 'application/json');
+  let sessionId = parseInt(req.params.sessionId);
+
+  let err, session;
+  [err, session] = await to(Sessions.destroy({ where: { id: sessionId } }));
+
+  if (err) {
+    return ReE(res, err, 422);
+  }
+  
+  // Success
+  return ReS(res, session, 200);
+}
+
+module.exports.deleteSession = deleteSession;

@@ -25,7 +25,7 @@ export class AppComponent {
      // set isLoggedIn
      this.isLoggedIn = authService.isLoggedIn();
     }
-  user = this.authService.user ? this.user.authService.user : 'home';
+
   logout(): void {
     this.authService.logout();
     this.toastsManager.success('Logged out!');

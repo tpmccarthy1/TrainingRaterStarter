@@ -19,14 +19,10 @@ export class AuthService {
 
   token: string = null;
   user: Object = null;
+
   // Return boolean of user log in state
   isLoggedIn(): Observable<boolean> {
     return this.isLoginSubject.asObservable();
-  }
-
-  // TODO: Find out how to get user data from login
-  getUserName(): void {
-    console.log(this.user.firstName + ' ' this.user.lastName);
   }
 
   constructor(
@@ -46,11 +42,9 @@ export class AuthService {
       return this.http.post<ILoginResponse>('http://localhost:3000/login', data)
         .do((response) => {
             this.token = response && response.success && response.token || null;
-            this.user = response.user;
             this.isLoginSubject.next(true);
         });
   }
-
 
   logout(): void {
     this.token = null;

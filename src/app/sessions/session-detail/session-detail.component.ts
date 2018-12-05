@@ -10,6 +10,7 @@ import { ToastsManager } from 'ng2-toastr';
 export class SessionsDetailComponent implements OnInit {
 
   session: ISession;
+  newSession: boolean;
 
   constructor(
       private sessionsService: SessionsService,
@@ -19,7 +20,13 @@ export class SessionsDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-      let id: string | number = this.route.snapshot.paramMap.get('sessionId');
+      // Variable for sessionId parameter
+      const sessionId = this.route.snapshot.paramMap.get('sessionId');
+
+      // Set newSession flag to false to show delete if not new session
+      this.newSession = sessionId === 'add' ? false : true;
+
+      let id: string | number = sessionId;
 
       id = isNaN(parseInt(id, 0)) ? 0 : parseInt(id, 0);
 

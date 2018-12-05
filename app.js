@@ -62,7 +62,3 @@ if (CONFIG.app === 'dev'){
 }
 
 module.exports = app;
-
-
-// add delete end points
-// refactor sessions and Users

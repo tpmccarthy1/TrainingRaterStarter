@@ -97,6 +97,23 @@ module.exports.get = get;
   }
   module.exports.createUser = createUser;
 
+  // Delete user function
+  const deleteUser = async function(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    let userId = parseInt(req.params.userId);
+
+    let err, user;
+    [err, user] = await to(Users.destroy({ where: { id: userId } }));
+ 
+    if (err) {
+      return ReE(res, err, 422);
+    }
+    
+    // Success
+    return ReS(res, user, 200);
+  }
+
+  module.exports.deleteUser = deleteUser;
 
   // Log in function
   const login = async function (req, res) {
@@ -137,23 +154,5 @@ module.exports.get = get;
   }
 
   module.exports.authUser = authUser;
-
-  // Delete user function
-  const deleteUser = async function(req, res){
-    res.setHeader('Content-Type', 'application/json');
-    let userId = parseInt(req.params.userId);
-
-    let err, user;
-    [err, user] = await to(Users.destroy({ where: { id: userId } }));
- 
-    if (err) {
-      return ReE(res, err, 422);
-    }
-    
-    // Success
-    return ReS(res, user, 200);
-  }
-
-  module.exports.deleteUser = deleteUser;
 
 

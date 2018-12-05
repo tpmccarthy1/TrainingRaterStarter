@@ -2,33 +2,32 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
+// Bring in Sessions & Users controllers
+const SessionsController = require('../controllers/SessionsController');
+const UsersController = require('../controllers/UsersController');
+
+// Session Routes
+
 // Function to authenticate user
 const auth = function(){
     return passport.authenticate('jwt', { session : false });
-};
-
-
-// Bring in Sessions controller
-const SessionsController = require('../controllers/SessionsController');
+}; 
 
 // Get all sessions
-router.get('/sessions',  SessionsController.getAll); 
+router.get('/sessions', auth(), SessionsController.getAll); 
 
 // Get specific session
-router.get('/sessions/:sessionId', SessionsController.get); 
+router.get('/sessions/:sessionId', auth(), SessionsController.get); 
 
 // Create new session
-router.post('/sessions', SessionsController.create); 
+router.post('/sessions', auth(), SessionsController.create); 
 
 // Update existing session
-router.put('/sessions', SessionsController.update); 
+router.put('/sessions', auth(), SessionsController.update); 
 
 // Delete session
-router.delete('/sessions/:sessionId', SessionsController.deleteSession);
+router.delete('/sessions/:sessionId', auth(), SessionsController.deleteSession);
 
-
-// Bring in Users controller
-const UsersController = require('../controllers/UsersController');
 
 // User Routes
 
@@ -47,6 +46,11 @@ router.put('/users', UsersController.update);
 // Delete a user
 router.delete('/users/:userId', UsersController.deleteUser);
 
+
+// Auth routes
+
+//Log in
+router.post('/login',  UsersController.login); 
 
 // Export as module
 module.exports = router;

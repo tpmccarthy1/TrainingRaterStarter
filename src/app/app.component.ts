@@ -1,7 +1,7 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { ToastsManager } from 'ng2-toastr';
 import { AuthService } from './common/auth/auth.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -10,10 +10,12 @@ import { Observable, BehaviorSubject } from 'rxjs';
   styleUrls: ['./app.component.less']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   // Variable to store log-in state
   isLoggedIn: Observable<boolean>;
   isNavbarCollapsed = false;
+  userData: Object;
+  userName;
 
   constructor(
     private toastsManager: ToastsManager,
@@ -26,7 +28,13 @@ export class AppComponent {
      this.isLoggedIn = authService.isLoggedIn();
     }
 
+  ngOnInit() {
+    this.authService.getUserData()
+        .subscribe((user) => user ? this.userName = user.firstName + '' + user.lastName : this.userName = '');
+  }
+
   logout(): void {
+    this.userName = '';
     this.authService.logout();
     this.toastsManager.success('Logged out!');
   }

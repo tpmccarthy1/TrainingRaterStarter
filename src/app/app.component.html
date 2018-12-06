@@ -20,6 +20,9 @@
         <li class="nav-item">
           <a class="nav-link" *ngIf="(isLoggedIn | async)" routerLink="/home"  (click)="logout()">Logout</a>
         </li>
+        <li class="nav-item" *ngIf="userName != ''">
+          <a class="nav-link">User: {{ userName | uppercase}}</a>
+        </li>
     </ul>
   </div>
 

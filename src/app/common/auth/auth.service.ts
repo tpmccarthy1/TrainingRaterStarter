@@ -2,34 +2,38 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // tslint:disable-next-line:import-blacklist
 import { Observable, BehaviorSubject } from 'rxjs';
+import { IUser } from '../../users/users.service';
 import 'rxjs/add/operator/do';
+
 
 export interface ILoginResponse {
     success: boolean;
     token?: string;
-    user?: string;
+    user?: IUser;
 }
 
 @Injectable()
 export class AuthService {
 
   token: string = null;
-  userData: Object = null;
+  userData: IUser = null;
 
   // Behavior subject to track if user is logged in
   isLoginSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
-  // Behavior subject for logged in user information
-  userDataSubject = new BehaviorSubject<Object>(this.userData);
+
+  // Behavior subject for logged in user informatio
+  userDataSubject = new BehaviorSubject<IUser>(this.userData);
 
   constructor(
     private http: HttpClient,
   ) { }
 
+
   isAuthenticated(): boolean {
     return this.token ? true : false;
   }
 
-  getUserData(): Observable<Object> {
+  getUserData(): Observable<IUser> {
     return this.userDataSubject.asObservable();
   }
 

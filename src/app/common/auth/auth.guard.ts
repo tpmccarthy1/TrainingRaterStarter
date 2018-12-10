@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, RouterStateSnapshot,Router, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate } from '@angular/router';
 import { Injectable } from '@angular/core';
 // tslint:disable-next-line:import-blacklist
 import { Observable } from 'rxjs';

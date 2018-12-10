@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // tslint:disable-next-line:import-blacklist
 import { Observable } from 'rxjs';
+import { SessionsService } from '../sessions.service';
 
 
 export type RatingValue = 1 | 2 | 3 | 4 | 5;
@@ -10,37 +11,32 @@ export interface ISessionRating {
     userId: number;
     sessionId: number;
     rating: RatingValue | number;
-    createDate: Date;
 }
 
 @Injectable()
 export class SessionRatingService {
 
-    // Remove, this is only to simulate a db
+    private avgRating = 0;
     private ratings: ISessionRating[] = [];
 
     constructor(
         private http: HttpClient,
+        private sessionService: SessionsService,
     ) { }
 
     getAvgRating(sessionId: number): Observable<number> {
+        this.sessionService.getSessions()
+        .subscribe(
+          (sessions) => {
+           for (let i = 0; i < sessions.length; i++) {
+               if (sessions[i].id === sessionId)  {
+                   this.avgRating = sessions[i].avgRating;
+                   break;
+               }
+            }
+          });
 
-        const ratings = this.ratings
-            .filter(
-                (ratingObj) => ratingObj.sessionId === sessionId,
-            ).map(
-                (ratingObj) => ratingObj.rating,
-            );
-
-        if (!this.ratings.length) {
-            return Observable.of(null);
-        }
-
-        let sum = 0;
-        ratings.forEach((rating: number) => sum += rating);
-        const avg = sum / ratings.length;
-
-        return Observable.of(avg);
+        return Observable.of(this.avgRating);
     }
 
     hasBeenRatedByUser(userId: number, sessionId: number): Observable<boolean> {
@@ -58,9 +54,12 @@ export class SessionRatingService {
         return Observable.of(ratings);
     }
 
-    save(rating: ISessionRating): Observable<ISessionRating> {
-        this.ratings.push(rating);
-        return Observable.of(rating);
+    save(rating: ISessionRating, sessionId: number): Observable<ISessionRating | number[]> {
+        if (sessionId) {
+          return this.http.put<ISessionRating>(`http://localhost:3000/rating/${sessionId}`, rating);
+        } else {
+            return this.http.post<ISessionRating>(`http://localhost:3000/rating/`, rating);
+        }
     }
 
 }

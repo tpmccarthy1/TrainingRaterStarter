@@ -44,6 +44,8 @@ export class SessionsDetailComponent implements OnInit {
           id: 0,
           name: '',
           location: '',
+          avgRating: 0,
+          Ratings: [],
           startTime: this.getLocalDateTime(),
           createdAt: this.getLocalDateTime(),
           updatedAt: this.getLocalDateTime(),

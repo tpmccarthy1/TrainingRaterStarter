@@ -1,4 +1,5 @@
 const Sessions = require('../models').Sessions;
+const Ratings = require('../models').Ratings;
 
 //Get all sessions
 const getAll = async function ( req, res ) {
@@ -12,13 +13,26 @@ const getAll = async function ( req, res ) {
         };
     }
 
-    [err, sessions] = await to(Sessions.findAll({ where: whereStatement}))
+    [err, sessions] = await to(Sessions.findAll({ include: [{ model: Ratings }], where: whereStatement}))
 
     if (err) {
       return ReE(res, err, 404);
     }
 
-    return ReS(res, sessions, 200);
+    let sessionsWithAverage = [];
+    for(let i in sessions){
+      let sessionInfo = sessions[i].toJSON();
+      sessionInfo.avgRating = 0;
+      for(let r in sessionInfo.Ratings) {
+        sessionInfo.avgRating += parseInt(sessionInfo.Ratings[r].rating);
+      }
+
+      if (sessionInfo.Ratings.length > 0) {
+        sessionInfo.avgRating = sessionInfo.avgRating / sessionInfo.Ratings.length;
+      }
+      sessionsWithAverage.push(sessionInfo);
+    }     
+    return ReS(res, sessionsWithAverage, 200);
 }
 
 module.exports.getAll = getAll;
@@ -56,7 +70,7 @@ const update = async function (req, res) {
       return ReE(res, err, 422);
     }
 
-    return res.json(session);
+    return ReS(res, session, 200);
   }
 module.exports.update = update;
   
@@ -67,16 +81,6 @@ const create = async function (req, res) {
   
     sessionInfo = req.body;
     [err, session] = await to(Sessions.create(sessionInfo));
-    if (err) {
-      if (typeof err == 'object' && typeof err.message != 'undefined') {
-        err = err.message;
-      }
-  
-      if (typeof code !== 'undefined') res.statusCode = code;
-      res.statusCode = 422; // unprocessable entity
-      return res.json({ success: false, error: err });
-    }
-    [err, session] = await to(session.save());
     if(err) {
         console.log(err);
         return ReE(res, err, 422);
@@ -87,7 +91,7 @@ const create = async function (req, res) {
 
 module.exports.create = create;
 
-// Delete user function
+// Delete session function
 const deleteSession = async function (req, res){
   res.setHeader('Content-Type', 'application/json');
   let sessionId = parseInt(req.params.sessionId);

@@ -51,5 +51,10 @@ module.exports = (sequelize, DataTypes) => {
     let expiration_time = parseInt(CONFIG.jwt_expiration);
     return "Bearer " + jwt.sign({ user_id: this.id }, CONFIG.jwt_encryption, { expiresIn: expiration_time });
   };
+
+  Users.associate = function (models) {
+    Users.hasMany(models.UserSessions, { foreignKey: 'userId', sourceKey: 'id' });
+  };
+
   return Users;
 };

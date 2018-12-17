@@ -34,8 +34,6 @@ export class SessionsDetailComponent implements OnInit {
         this.sessionsService.getSessionById(id)
         .subscribe(
           (session) => {
-              const startTime = new Date(session.startTime);
-              session.startTime = startTime.toISOString().slice(0, 16);
               this.session = session;
         });
       } else {

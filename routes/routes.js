@@ -34,13 +34,13 @@ router.delete('/sessions/:sessionId', auth(), SessionsController.deleteSession);
 // User Routes
 
 // Get all users
-router.get('/users', auth(), UsersController.getAll); 
+router.get('/users', UsersController.getAll); 
 
 // Get single user
 router.get('/users/:userId', auth(), UsersController.get);
 
 // Create a new user
-router.post('/users', auth(), UsersController.create); 
+router.post('/users', UsersController.create); 
 
 // Update a user
 router.put('/users', auth(), UsersController.update); 
@@ -66,7 +66,7 @@ router.post('/login',  UsersController.login);
 router.post('/ratings/:sessionId', auth(), RatingsController.create);
 
 // update a ratings 
-router.put('/ratings/:ratingId', auth(), RatingsController.update);
+router.put('/ratings/:sessionId', auth(), RatingsController.update);
 
 // Export as module
 module.exports = router;

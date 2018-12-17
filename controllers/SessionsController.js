@@ -39,18 +39,27 @@ module.exports.getAll = getAll;
 
 //Get a single session 
 const get = async function (req, res) {
-    
-    let err, session;
-    let sessionId = parseInt(req.params.sessionId)
-    res.setHeader('Content-Type', 'application/json');
   
-    [err, session] = await to(Sessions.findById(sessionId));
+    let sessionId = parseInt(req.params.sessionId);
+    res.setHeader('Content-Type', 'application/json');
+
+    [err, session] = await to(Sessions.findOne({ include: [{ model: Ratings }], where: {id: sessionId } }));
 
     if (!session) {
       return ReE(res, err, 404);
     }
-
-    return ReS(res, session, 200);
+  
+    let sessionWithAverage = [];
+    let sessionInfo = session.toJSON();
+    sessionInfo.avgRating = 0;
+      for(let r in sessionInfo.Ratings) {
+        sessionInfo.avgRating += parseInt(sessionInfo.Ratings[r].rating);
+      }
+      if (sessionInfo.Ratings.length > 0) {
+        sessionInfo.avgRating = sessionInfo.avgRating / sessionInfo.Ratings.length;
+      }
+      sessionWithAverage.push(sessionInfo);
+    return ReS(res, sessionWithAverage, 200);
   }
 
 module.exports.get = get;

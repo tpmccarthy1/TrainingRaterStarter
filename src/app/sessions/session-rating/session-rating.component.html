@@ -1,8 +1,11 @@
 <div (click)="stopTheClick($event)" class="row">
     <div *ngIf="!ratingMode">
+         <div class="col-md-6" *ngIf="!avgRating">
+            no ratings yet
+        </div>
         <div class="col-md-6" *ngIf="avgRating">
             {{avgRating}} stars
-        </div>
+          </div>
         <div class="col-md-6" *ngIf="hasBeenRatedByUser !== undefined && !hasBeenRatedByUser">
             <button class="btn btn-sm btn-secondary" (click)="ratingMode=true">Rate</button>
         </div>
